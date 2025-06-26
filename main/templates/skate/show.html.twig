@@ -1,0 +1,93 @@
+{# filepath: main/templates/skate/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Dettagli {{ skateboard.marca }} {{ skateboard.modello }}{% endblock %}
+
+{% block body %}
+<h1>{{ skateboard.marca }} {{ skateboard.modello }}</h1>
+<div class="widget-show">
+    <div class="show-item-images">
+        {% set immagini = skateboard.immagini is iterable ? skateboard.immagini : (skateboard.immagini ? skateboard.immagini|split(',') : []) %}
+        <div class="main-img-col">
+            <img src="{{ asset('uploads/skateboards/' ~ (immagini[0] ?? 'default.webp')) }}"
+                 alt="Immagine principale"
+                 class="main-img"
+                 onerror="this.onerror=null;this.src='{{ asset('uploads/skateboards/default.webp') }}';">
+        </div>
+        <div class="side-imgs-col">
+            <img src="{{ asset('uploads/skateboards/' ~ (immagini[1] ?? 'default.webp')) }}"
+                 alt="Immagine secondaria 1"
+                 class="side-img"
+                 style="animation: fadeInBottom 2.5s forwards;"
+                 onerror="this.onerror=null;this.src='{{ asset('uploads/skateboards/default.webp') }}';">
+            <img src="{{ asset('uploads/skateboards/' ~ (immagini[2] ?? 'default.webp')) }}"
+                 alt="Immagine secondaria 2"
+                 class="side-img"
+                 style="animation: fadeInBottom 3s forwards;"
+                 onerror="this.onerror=null;this.src='{{ asset('uploads/skateboards/default.webp') }}';">
+        </div>
+    </div>
+    <div class="show-item-description">
+        <ul>
+            <li><strong>Taglia:</strong> {{ skateboard.taglia }}</li>
+            <li><strong>Colore:</strong> {{ skateboard.colore }}</li>
+            <li><strong>Tipologia:</strong> {{ skateboard.tipologia }}</li>
+        </ul>
+        <div class="buttons">
+            <!-- Bottone Modifica che apre la modal -->
+            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal">
+                Modifica
+            </button>
+            <!-- Bottone Elimina che apre la modal -->
+            <button type="button" class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                Elimina
+            </button>
+            <a href="{{ path('skate_index') }}" class="btn btn-secondary">Torna alla lista</a>
+        </div>
+    </div>
+</div>
+
+{# Modal Modifica (fuori dal blocco descrizione) #}
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{{ path('skate_edit', {id: skateboard.id}) }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Modifica Skateboard</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="marca" value="{{ skateboard.marca }}" class="form-control mb-2" required placeholder="Marca">
+                    <input type="text" name="modello" value="{{ skateboard.modello }}" class="form-control mb-2" required placeholder="Modello">
+                    <input type="text" name="taglia" value="{{ skateboard.taglia }}" class="form-control mb-2" required placeholder="Taglia">
+                    <input type="text" name="colore" value="{{ skateboard.colore }}" class="form-control mb-2" required placeholder="Colore">
+                    <input type="text" name="tipologia" value="{{ skateboard.tipologia }}" class="form-control mb-2" required placeholder="Tipologia">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="submit" class="btn btn-primary">Conferma</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{# Modal Elimina (fuori dal blocco descrizione) #}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Conferma eliminazione</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+            </div>
+            <div class="modal-body">
+                Sei sicuro di voler eliminare questo skateboard?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                <a href="{{ path('skate_delete', {id: skateboard.id}) }}" class="btn btn-danger">Elimina</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

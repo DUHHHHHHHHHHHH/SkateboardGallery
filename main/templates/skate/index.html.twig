@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista Skateboard{% endblock %}
+
+{% block body %}
+<h1>Skateboard disponibili</h1>
+
+<div class="widget-actions">
+  <!-- Bottone per aprire la modal -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#skateCreateModal">
+    Aggiungi Skateboard
+  </button>
+  <a href="{{ path('home') }}" class="btn btn-secondary">Torna alla Home</a>
+</div>
+
+<!-- Modal Bootstrap per il form di creazione (fuori da .widget-actions) -->
+<div class="modal fade" id="skateCreateModal" tabindex="-1" aria-labelledby="skateCreateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{{ path('skate_create') }}" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="skateCreateModalLabel">Aggiungi Skateboard</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="marca" class="form-label">Marca</label>
+            <input type="text" class="form-control" id="marca" name="marca" required>
+          </div>
+          <div class="mb-3">
+            <label for="modello" class="form-label">Modello</label>
+            <input type="text" class="form-control" id="modello" name="modello" required>
+          </div>
+          <div class="mb-3">
+            <label for="taglia" class="form-label">Taglia</label>
+            <input type="text" class="form-control" id="taglia" name="taglia" required>
+          </div>
+          <div class="mb-3">
+            <label for="colore" class="form-label">Colore</label>
+            <input type="text" class="form-control" id="colore" name="colore" required>
+          </div>
+          <div class="mb-3">
+            <label for="tipologia" class="form-label">Tipologia</label>
+            <input type="text" class="form-control" id="tipologia" name="tipologia" required>
+          </div>
+          <div class="mb-3">
+            <label for="immagini" class="form-label">Immagini</label>
+            <input type="file" class="form-control" id="immagini" name="immagini[]" multiple>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+          <button type="submit" class="btn btn-primary">Salva</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="widget-filtri">
+  <!-- Filtri -->
+  <form method="get" class="row g-2 mb-3" style="max-width: 400px;">
+    <div class="col">
+      <select name="tipologia" class="form-select" onchange="this.form.submit()">
+        <option value="">Tutte le tipologie</option>
+        {% set tipi = [] %}
+        {% for skateboard in skateboards %}
+          {% if skateboard.tipologia not in tipi %}
+            {% set tipi = tipi|merge([skateboard.tipologia]) %}
+          {% endif %}
+        {% endfor %}
+        {% for tipo in tipi|sort %}
+          <option value="{{ tipo }}" {% if app.request.get('tipologia') == tipo %}selected{% endif %}>{{ tipo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn-outline-primary">Filtra</button>
+    </div>
+  </form>
+</div>
+
+<div class="widget-lista">
+  <div class="container">
+    {% for skateboard in skateboards|shuffle %}
+      {% set immagini = skateboard.immagini is iterable ? skateboard.immagini : (skateboard.immagini ? skateboard.immagini|split(',') : []) %}
+      {% set img_primaria = immagini|first ?: 'default.webp' %}
+      <div class="item-skateboard animated-card" style="animation-delay: {{ loop.index0 * 0.2 }}s;">
+        <a href="{{ path('skate_show', {id: skateboard.id}) }}">
+          <img src="{{ asset('uploads/skateboards/' ~ img_primaria) }}"
+               alt="Immagine"
+               style="width:100px;"
+               onerror="this.onerror=null;this.src='{{ asset('uploads/skateboards/default.webp') }}';">
+          <div class="item-title">{{ skateboard.marca }} {{ skateboard.modello }}</div>
+        </a>
+      </div>
+    {% else %}
+      <p>Nessuno skateboard presente.</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
