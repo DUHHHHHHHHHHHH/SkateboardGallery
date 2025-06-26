@@ -1,4 +1,4 @@
-progetto fatto con php symfony (operazioni crud) più  html twig e qualche css personalizzato per animazioni e layout speciali (più bootstrap occasionalmente)
+progetto fatto con php symfony (operazioni crud) più  html twig e qualche css personalizzato per animazioni e layout speciali (più bootstrap occasionalmente)<br><br><br>
 screen introduttivi:
 
 pagina principale
@@ -14,3 +14,14 @@ visualizzazione singolo skate
 login & register
 ![image](https://github.com/user-attachments/assets/6b690b90-7b8b-42c7-8038-06d08f404119)
 ![image](https://github.com/user-attachments/assets/d1810762-2d87-4ea4-adb1-4697570cb4c3)
+
+comandi utili (che mi scordo):
+- docker compose exec php bash <br>
+- mysql -h db -u symfony -p <br>
+- use symfony<br>
+<br>
+- utente: 'test' <br>
+- password 'test'<br>
+<br>
+per estrarre il database!<br>
+- docker exec skate-db-1 sh -c 'exec mysqldump --no-tablespaces -u symfony -psymfony symfony' > db-1.sql
