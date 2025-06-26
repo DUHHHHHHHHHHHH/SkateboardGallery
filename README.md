@@ -14,3 +14,10 @@ visualizzazione singolo skate
 login & register
 ![image](https://github.com/user-attachments/assets/6b690b90-7b8b-42c7-8038-06d08f404119)
 ![image](https://github.com/user-attachments/assets/d1810762-2d87-4ea4-adb1-4697570cb4c3)
+
+comandi utili (che mi scordo):
+docker compose exec php bash
+mysql -h db -u symfony -p 
+use symfony
+
+utente: 'test' password 'test'
